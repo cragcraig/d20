@@ -12,7 +12,7 @@ import android.util.Log;
 
 public class PolyRenderer {
 
-    private final String vertexShaderCode =
+    private final static String vertexShaderCode =
         // This matrix member variable provides a hook to manipulate
         // the coordinates of the objects that use this vertex shader
         "uniform mat4 u_MVPMatrix;" +
@@ -30,7 +30,7 @@ public class PolyRenderer {
         // the matrix must be included as a modifier of gl_Position
         "  vec3 modelViewVertex = vec3(u_MVMatrix * a_Position);" +
         "  vec3 modelViewNormal = vec3(u_MVMatrix * vec4(a_Normal, 0.0));" +
-        "  float distance = length(u_LightPos - modelViewVertex);" +
+        //"  float distance = length(u_LightPos - modelViewVertex);" +
         "  vec3 lightVector = normalize(u_LightPos - modelViewVertex);" +
         "  float diffuse = max(dot(modelViewNormal, lightVector), 0.1);" +
         //"  diffuse = diffuse * (1.0 / (1.0 + (0.25 * distance * distance)));" +
@@ -38,7 +38,7 @@ public class PolyRenderer {
         "  gl_Position = u_MVPMatrix * a_Position;" +
         "}";
 
-    private final String fragmentShaderCode =
+    private final static String fragmentShaderCode =
         "precision mediump float;" +
         "varying vec4 v_Color;" +
 
@@ -87,7 +87,7 @@ public class PolyRenderer {
                                      GLES20.GL_FLOAT,
                                      false,
                                      PolyShape.VERTEX_STRIDE,
-                                     mPolyShape.faceNormalsBuffer);
+                                     mPolyShape.vertexNormalsBuffer);
 
         // Prepare the triangle coordinate data
         mPositionHandle = GLES20.glGetAttribLocation(mProgram, "a_Position");

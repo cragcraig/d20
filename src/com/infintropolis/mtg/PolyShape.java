@@ -13,28 +13,25 @@ import java.nio.ShortBuffer;
 public abstract class PolyShape {
 
     static final int COORDS_PER_VERTEX = 3;
-    static final int VERTECIES_PER_FACE = 3;
+    static final int VERTICIES_PER_FACE = 3;
     static final int VERTEX_STRIDE = COORDS_PER_VERTEX * 4; // 4 bytes per vertex
 
     public final FloatBuffer vertexCoordsBuffer;
     public final ShortBuffer drawOrderBuffer;
-    public final FloatBuffer faceNormalsBuffer;
+    public final FloatBuffer vertexNormalsBuffer;
 
+    private float[] vertexNormals;
     private float[] faceNormals;
 
     public PolyShape() {
         vertexCoordsBuffer = createFloatBuffer(getVertexCoords());
         drawOrderBuffer = createShortBuffer(getDrawOrder());
-        // Compute face normals.
-        faceNormals = new float[getVertexCoords().length];
-        // Not actual normals...
-        for (int i = 0; i < faceNormals.length; i++) {
-            faceNormals[0] = 0.63f;
-            faceNormals[1] = 0.63f;
-            faceNormals[2] = 0.62f;
-        }
-        //computeNormals();
-        faceNormalsBuffer = createFloatBuffer(faceNormals);
+        // Compute normals.
+        faceNormals = new float[numFaces() * COORDS_PER_VERTEX];
+        vertexNormals = new float[numUniqueVerticies() * COORDS_PER_VERTEX];
+        computeVertexNormals();
+        vertexNormalsBuffer = createFloatBuffer(vertexNormals);
+        assert getVertexCoords().length == vertexNormals.length;
     }
 
     public abstract float[] getVertexCoords();
@@ -44,12 +41,16 @@ public abstract class PolyShape {
         return getDrawOrder().length / COORDS_PER_VERTEX;
     }
 
+    public final int numUniqueVerticies() {
+        return getVertexCoords().length / COORDS_PER_VERTEX;
+    }
+
     public final int numCoordinates() {
         return getDrawOrder().length;
     }
 
     public final int numFaces() {
-        return getDrawOrder().length / VERTECIES_PER_FACE;
+        return getDrawOrder().length / VERTICIES_PER_FACE;
     }
 
     private static final FloatBuffer createFloatBuffer(float[] floats) {
@@ -74,10 +75,39 @@ public abstract class PolyShape {
         return drawListBuffer;
     }
 
-    private final void computeNormals() {
+    private final void computeVertexNormals() {
+        final float[] vertexCoords = getVertexCoords();
+        final short[] drawOrder = getDrawOrder();
+        float[] sum = new float[3];
+        computeFaceNormals();
+        for (int v = 0; v < numUniqueVerticies(); v++) {
+            sum[0] = 0.0f;
+            sum[1] = 0.0f;
+            sum[2] = 0.0f;
+            int count = 0;
+            // Vertex normal is the average of all surrounding face normals.
+            for (int i = 0; i < drawOrder.length; i += VERTICIES_PER_FACE) {
+                for (int j = 0; j < VERTICIES_PER_FACE; j++) {
+                    if (drawOrder[i + j] == v) {
+                        sum[0] += faceNormals[i];
+                        sum[1] += faceNormals[i + 1];
+                        sum[2] += faceNormals[i + 2];
+                        count++;
+                    }
+                }
+            }
+            vertexNormals[v * COORDS_PER_VERTEX] = sum[0] / (float)count;
+            vertexNormals[v * COORDS_PER_VERTEX + 1] = sum[1] / (float)count;
+            vertexNormals[v * COORDS_PER_VERTEX + 2] = sum[2] / (float)count;
+        }
+            
+            
+    }
+
+    private final void computeFaceNormals() {
+        final float[] vertexCoords = getVertexCoords();
+        final short[] drawOrder = getDrawOrder();
         for (int i = 0; i < faceNormals.length; i += COORDS_PER_VERTEX) {
-            final float[] vertexCoords = getVertexCoords();
-            final short[] drawOrder = getDrawOrder();
             computeFaceNormal(vertexCoords, drawOrder[i] * COORDS_PER_VERTEX,
                               vertexCoords, drawOrder[i + 1] * COORDS_PER_VERTEX,
                               vertexCoords, drawOrder[i + 2] * COORDS_PER_VERTEX,
@@ -94,8 +124,8 @@ public abstract class PolyShape {
     }
 
     private void vectorComputeNormal(float[] a, int aOffset,
-                              float[] b, int bOffset,
-                              float[] out, int outOffset) {
+                                     float[] b, int bOffset,
+                                     float[] out, int outOffset) {
         // Compute cross product a X b into out.
         out[outOffset] = a[aOffset + 1] * b[bOffset + 2] - a[aOffset + 2] * b[bOffset + 1];
         out[outOffset + 1] = a[aOffset + 2] * b[bOffset] - a[aOffset] * b[bOffset + 2];
@@ -108,10 +138,10 @@ public abstract class PolyShape {
                                      in[inOffset + 1] * in[inOffset + 1] +
                                      in[inOffset + 2] * in[inOffset + 2]);
         if (len != 0.0f) {
-          out[outOffset] = in[inOffset] / len;
-          out[outOffset + 1] = in[inOffset + 1] / len;
-          out[outOffset + 2] = in[inOffset + 2] / len;
-          return true;
+            out[outOffset] = in[inOffset] / len;
+            out[outOffset + 1] = in[inOffset + 1] / len;
+            out[outOffset + 2] = in[inOffset + 2] / len;
+            return true;
         }
         return false;
     }
