@@ -19,15 +19,17 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
 
     private static final String TAG = "MyGLRenderer";
     private PolyRenderer mTriangle;
-    private PolyRenderer   mSquare;
+    private PolyRenderer mSquare;
 
-    private final float[] mMVPMatrix = new float[16];
+    private final float[] mMVP_Matrix = new float[16];
+    private final float[] mMV_Matrix = new float[16];
+    private final float[] mV_Matrix = new float[16];
     private final float[] mProjMatrix = new float[16];
-    private final float[] mVMatrix = new float[16];
     private final float[] mRotationMatrix = new float[16];
 
     // Declare as volatile because we are updating it from another thread
-    public volatile float mAngle;
+    public volatile float mAngleX;
+    public volatile float mAngleY;
 
     @Override
     public void onSurfaceCreated(GL10 unused, EGLConfig config) {
@@ -46,27 +48,28 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
         GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT | GLES20.GL_DEPTH_BUFFER_BIT);
 
         // Set the camera position (View matrix)
-        Matrix.setLookAtM(mVMatrix, 0, 0, 0, -15, 0f, 0f, 0f, 0f, 1.0f, 0.0f);
+        Matrix.setLookAtM(mV_Matrix, 0, 0, 0, -15, 0f, 0f, 0f, 0f, 1.0f, 0.0f);
+
+        // Create a rotation for the model
+        Matrix.setRotateM(mRotationMatrix, 0, mAngleX, 0.0f, mAngleY, 1.0f);
+        Matrix.multiplyMM(mMV_Matrix, 0, mRotationMatrix, 0, mV_Matrix, 0);
 
         // Calculate the projection and view transformation
-        Matrix.multiplyMM(mMVPMatrix, 0, mProjMatrix, 0, mVMatrix, 0);
+        Matrix.multiplyMM(mMVP_Matrix, 0, mProjMatrix, 0, mMV_Matrix, 0);
 
         // Draw square
         // mSquare.draw(mMVPMatrix);
 
-        // Create a rotation for the triangle
 //        long time = SystemClock.uptimeMillis() % 4000L;
 //        float angle = 0.090f * ((int) time);
-        Matrix.setRotateM(mRotationMatrix, 0, mAngle, 0.0f, 0.0f, 1.0f);
         //Matrix.setIdentityM(mRotationMatrix, 0);
         //Matrix.translateM(mRotationMatrix, 0, 0.0f, 0.0f, 20.0f);
 
         // Combine the rotation matrix with the projection and camera view
-        Matrix.multiplyMM(mMVPMatrix, 0, mRotationMatrix, 0, mMVPMatrix, 0);
         //Matrix.multiplyMM(mMVPMatrix, 0, mMVPMatrix, 0, mRotationMatrix, 0);
 
         // Draw triangle
-        mTriangle.draw(mMVPMatrix, mVMatrix);
+        mTriangle.draw(mMVP_Matrix, mRotationMatrix);
     }
 
     @Override
@@ -74,7 +77,7 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
         // Adjust the viewport based on geometry changes,
         // such as screen rotation
         GLES20.glViewport(0, 0, width, height);
-        GLES20.glEnable(GLES20.GL_CULL_FACE);
+        //GLES20.glEnable(GLES20.GL_CULL_FACE);
         GLES20.glEnable(GLES20.GL_DEPTH_TEST);
 
         float ratio = (float) width / height;

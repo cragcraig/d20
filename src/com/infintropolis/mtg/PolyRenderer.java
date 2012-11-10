@@ -54,7 +54,7 @@ public class PolyRenderer {
     private int mNormalHandle;
     private int mLightPosHandle;
 
-    // Set color with red, green, blue and alpha (opacity) values
+    // Set color with red, green, blue and alpha
     float color[] = { 0.2f, 0.709803922f, 0.898039216f, 0.7f };
 
     private PolyShape mPolyShape;
@@ -62,7 +62,7 @@ public class PolyRenderer {
     public PolyRenderer(PolyShape polyShape) {
         mPolyShape = polyShape;
 
-        // prepare shaders and OpenGL program
+        // Prepare shaders and OpenGL program
         int vertexShader = MyGLRenderer.loadShader(GLES20.GL_VERTEX_SHADER,
                                                    vertexShaderCode);
         int fragmentShader = MyGLRenderer.loadShader(GLES20.GL_FRAGMENT_SHADER,
@@ -117,7 +117,8 @@ public class PolyRenderer {
 
         // Draw the PolyShape
         GLES20.glDrawElements(GLES20.GL_TRIANGLES,
-                              mPolyShape.numCoordinates(),
+                              3*6,
+                              //mPolyShape.numCoordinates(),
                               GLES20.GL_UNSIGNED_SHORT,
                               mPolyShape.drawOrderBuffer);
 
