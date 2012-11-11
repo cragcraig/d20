@@ -46,7 +46,6 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
 
     @Override
     public void onDrawFrame(GL10 gl) {
-
         // Draw background color
         gl.glClear(GL10.GL_COLOR_BUFFER_BIT | GL10.GL_DEPTH_BUFFER_BIT);
 
@@ -80,8 +79,7 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
 
     // Setting the light
     private void drawLights(GL10 gl) {
-        // Point Light
-        float[] position = { 0.0f, 1.0f, 0.0f, 0.0f };
+        float[] position = { 0.0f, 1.0f, 0.0f, 0.0f }; // directional
         float[] diffuse = { 1.0f, 1.0f, 1.0f, 1f };
         float[] specular = { 0, 0, 0, 0 };
         float[] ambient = { .3f, .3f, .3f, 1 };

@@ -9,18 +9,20 @@ public class IcosahedronShape extends PolyShape {
 
     public final static float PHI = (float)(1 + Math.sqrt(5)) / 2.0f;
 
-    private final static float vertexCoords[] = {   PHI,  0.0f,  1.0f,
-                                                   -PHI,  0.0f,  1.0f,
-                                                   -PHI,  0.0f, -1.0f,
-                                                    PHI,  0.0f, -1.0f,
-                                                   0.0f, -1.0f,  -PHI,
-                                                   0.0f, -1.0f,   PHI,
-                                                   0.0f,  1.0f,   PHI,
-                                                   0.0f,  1.0f,  -PHI,
-                                                   1.0f,   PHI,  0.0f,
-                                                   1.0f,  -PHI,  0.0f,
-                                                  -1.0f,  -PHI,  0.0f,
-                                                  -1.0f,   PHI,  0.0f };
+    private final static float vertexCoords[] = {  1.0f,  0.0f,   PHI,
+                                                  -1.0f,  0.0f,   PHI,
+                                                  -1.0f,  0.0f,  -PHI,
+                                                   1.0f,  0.0f,  -PHI,
+
+                                                   0.0f,  -PHI, -1.0f,
+                                                   0.0f,  -PHI,  1.0f,
+                                                   0.0f,   PHI,  1.0f,
+                                                   0.0f,   PHI, -1.0f,
+
+                                                    PHI,  1.0f,  0.0f,
+                                                    PHI, -1.0f,  0.0f,
+                                                   -PHI, -1.0f,  0.0f,
+                                                   -PHI,  1.0f,  0.0f };
 
     private final static short drawOrder[] = {  0,  6,  1,
                                                 0,  1,  5,

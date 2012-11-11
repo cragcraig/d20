@@ -58,10 +58,10 @@ public abstract class PolyShape {
         // (# of values * 4 bytes per float)
         ByteBuffer bb = ByteBuffer.allocateDirect(floats.length * 4);
         bb.order(ByteOrder.nativeOrder());
-        FloatBuffer vertexBuffer = bb.asFloatBuffer();
-        vertexBuffer.put(floats);
-        vertexBuffer.position(0);
-        return vertexBuffer;
+        FloatBuffer floatBuf = bb.asFloatBuffer();
+        floatBuf.put(floats);
+        floatBuf.position(0);
+        return floatBuf;
     }
 
     private static final ShortBuffer createShortBuffer(short[] shorts) {
@@ -69,10 +69,10 @@ public abstract class PolyShape {
         // (# of values * 2 bytes per short)
         ByteBuffer dlb = ByteBuffer.allocateDirect(shorts.length * 2);
         dlb.order(ByteOrder.nativeOrder());
-        ShortBuffer drawListBuffer = dlb.asShortBuffer();
-        drawListBuffer.put(shorts);
-        drawListBuffer.position(0);
-        return drawListBuffer;
+        ShortBuffer shortBuf = dlb.asShortBuffer();
+        shortBuf.put(shorts);
+        shortBuf.position(0);
+        return shortBuf;
     }
 
     private final void computeVertexNormals() {
@@ -100,8 +100,6 @@ public abstract class PolyShape {
             vertexNormals[v * COORDS_PER_VERTEX + 1] = sum[1] / (float)count;
             vertexNormals[v * COORDS_PER_VERTEX + 2] = sum[2] / (float)count;
         }
-            
-            
     }
 
     private final void computeFaceNormals() {
@@ -126,7 +124,7 @@ public abstract class PolyShape {
     private void vectorComputeNormal(float[] a, int aOffset,
                                      float[] b, int bOffset,
                                      float[] out, int outOffset) {
-        // Compute cross product a X b into out.
+        // Cross product a X b into out.
         out[outOffset] = a[aOffset + 1] * b[bOffset + 2] - a[aOffset + 2] * b[bOffset + 1];
         out[outOffset + 1] = a[aOffset + 2] * b[bOffset] - a[aOffset] * b[bOffset + 2];
         out[outOffset + 2] = a[aOffset] * b[bOffset + 1] - a[aOffset + 1] * b[bOffset];
