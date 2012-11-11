@@ -12,118 +12,65 @@ import android.util.Log;
 
 public class PolyRenderer {
 
-    private final static String vertexShaderCode =
-        // This matrix member variable provides a hook to manipulate
-        // the coordinates of the objects that use this vertex shader
-        "uniform mat4 u_MVPMatrix;" +
-
-        "uniform mat4 u_MVMatrix;" +
-        "uniform vec3 u_LightPos;" +
-        "uniform vec4 a_Color;" +
-
-        "attribute vec4 a_Position;" +
-        "attribute vec3 a_Normal;" +
-
-        "varying vec4 v_Color;" +
-
-        "void main() {" +
-        // the matrix must be included as a modifier of gl_Position
-        "  vec3 modelViewVertex = vec3(u_MVMatrix * a_Position);" +
-        "  vec3 modelViewNormal = vec3(u_MVMatrix * vec4(a_Normal, 0.0));" +
-        //"  float distance = length(u_LightPos - modelViewVertex);" +
-        "  vec3 lightVector = normalize(u_LightPos - modelViewVertex);" +
-        "  float diffuse = max(dot(modelViewNormal, lightVector), 0.1);" +
-        //"  diffuse = diffuse * (1.0 / (1.0 + (0.25 * distance * distance)));" +
-        "  v_Color = a_Color * diffuse;" +
-        "  gl_Position = u_MVPMatrix * a_Position;" +
-        "}";
-
-    private final static String fragmentShaderCode =
-        "precision mediump float;" +
-        "varying vec4 v_Color;" +
-
-        "void main() {" +
-        "  gl_FragColor = v_Color;" +
-        "}";
-
-    private final int mProgram;
-    private int mPositionHandle;
-    private int mColorHandle;
-    private int mMVPMatrixHandle;
-    private int mMVMatrixHandle;
-    private int mNormalHandle;
-    private int mLightPosHandle;
-
     // Set color with red, green, blue and alpha
-    float color[] = { 0.2f, 0.709803922f, 0.898039216f, 0.7f };
+    float color[] = { 0.2f, 0.709803922f, 0.898039216f, 1.0f };
 
     private PolyShape mPolyShape;
 
     public PolyRenderer(PolyShape polyShape) {
         mPolyShape = polyShape;
-
-        // Prepare shaders and OpenGL program
-        int vertexShader = MyGLRenderer.loadShader(GLES20.GL_VERTEX_SHADER,
-                                                   vertexShaderCode);
-        int fragmentShader = MyGLRenderer.loadShader(GLES20.GL_FRAGMENT_SHADER,
-                                                     fragmentShaderCode);
-        mProgram = MyGLRenderer.createAndLinkProgram(vertexShader, fragmentShader,
-            new String[] {"a_Position", "a_Normal"});
     }
 
-    public void draw(float[] mvpMatrix, float[] mvMatrix) {
-        // Add program to OpenGL environment
-        GLES20.glUseProgram(mProgram);
+    public void draw(GL10 gl, float mAngleX, float mAngleY) {
+        gl.glLoadIdentity();
+        // Translates 4 units into the screen.
+        gl.glTranslatef(0, 0, -10);
+        gl.glRotatef(mAngleX, 1.0f, 0.0f, 0.0f);
+        gl.glRotatef(mAngleY, 1.0f, 0.0f, 0.0f);
 
-        // get shader handles
-        mLightPosHandle = GLES20.glGetUniformLocation(mProgram, "u_LightPos");
-        GLES20.glUniform3f(mLightPosHandle, 3.0f, 3.0f, 3.0f);
+        // Counter-clockwise winding.
+        gl.glFrontFace(GL10.GL_CCW);
+        // Enable face culling.
+        gl.glEnable(GL10.GL_CULL_FACE);
+        // Re-normalize to fix scaling issues.
+        gl.glEnable(GL10.GL_NORMALIZE);
+        // What faces to remove with the face culling.
+        gl.glCullFace(GL10.GL_BACK);
 
-        // Prepare the triangle normal data.
-        mNormalHandle = GLES20.glGetAttribLocation(mProgram, "a_Normal"); 
-        GLES20.glEnableVertexAttribArray(mNormalHandle);
-        GLES20.glVertexAttribPointer(mNormalHandle,
-                                     PolyShape.COORDS_PER_VERTEX,
-                                     GLES20.GL_FLOAT,
-                                     false,
-                                     PolyShape.VERTEX_STRIDE,
-                                     mPolyShape.vertexNormalsBuffer);
+        setMaterial(gl);
 
-        // Prepare the triangle coordinate data
-        mPositionHandle = GLES20.glGetAttribLocation(mProgram, "a_Position");
-        GLES20.glEnableVertexAttribArray(mPositionHandle);
-        GLES20.glVertexAttribPointer(mPositionHandle,
-                                     PolyShape.COORDS_PER_VERTEX,
-                                     GLES20.GL_FLOAT,
-                                     false,
-                                     PolyShape.VERTEX_STRIDE,
-                                     mPolyShape.vertexCoordsBuffer);
+        gl.glColor4f(0.2f, 0.709803922f, 0.898039216f, 0.7f);
 
-        // Set color for drawing the triangle
-        mColorHandle = GLES20.glGetUniformLocation(mProgram, "a_Color");
-        GLES20.glUniform4fv(mColorHandle, 1, color, 0);
+        // Enabled the vertices buffer for writing and to be used during
+        // rendering.
+        gl.glEnableClientState(GL10.GL_VERTEX_ARRAY);
+        gl.glEnableClientState(GL10.GL_NORMAL_ARRAY);
+        // Specifies the location and data format of an array of vertex
+        // coordinates to use when rendering.
+        gl.glVertexPointer(PolyShape.COORDS_PER_VERTEX, GL10.GL_FLOAT, 0,
+                           mPolyShape.vertexCoordsBuffer);
+        gl.glNormalPointer(GL10.GL_FLOAT, 0, mPolyShape.vertexNormalsBuffer);
 
-        // get handle to shape's transformation matrix
-        mMVPMatrixHandle = GLES20.glGetUniformLocation(mProgram, "u_MVPMatrix");
-        MyGLRenderer.checkGlError("glGetUniformLocation");
-        mMVMatrixHandle = GLES20.glGetUniformLocation(mProgram, "u_MVMatrix"); 
-        MyGLRenderer.checkGlError("glGetUniformLocation");
+        gl.glDrawElements(GL10.GL_TRIANGLES, mPolyShape.numCoordinates(),
+                          GL10.GL_UNSIGNED_SHORT, mPolyShape.drawOrderBuffer);
 
-        // Apply the projection and view transformation
-        GLES20.glUniformMatrix4fv(mMVPMatrixHandle, 1, false, mvpMatrix, 0);
-        MyGLRenderer.checkGlError("glUniformMatrix4fv");
-        GLES20.glUniformMatrix4fv(mMVMatrixHandle, 1, false, mvMatrix, 0);
-        MyGLRenderer.checkGlError("glUniformMatrix4fv");
-
-        // Draw the PolyShape
-        GLES20.glDrawElements(GLES20.GL_TRIANGLES,
-                              3*6,
-                              //mPolyShape.numCoordinates(),
-                              GLES20.GL_UNSIGNED_SHORT,
-                              mPolyShape.drawOrderBuffer);
-
-        // Disable vertex array
-        GLES20.glDisableVertexAttribArray(mPositionHandle);
-        GLES20.glDisableVertexAttribArray(mNormalHandle);
+        // Disable the vertices buffer.
+        gl.glDisableClientState(GL10.GL_VERTEX_ARRAY);
+        gl.glDisableClientState(GL10.GL_NORMAL_ARRAY);
+        // Restore state.
+        gl.glDisable(GL10.GL_CULL_FACE);
+        gl.glDisable(GL10.GL_NORMALIZE);
     }
+
+    private void setMaterial(GL10 gl) {
+        float shininess = 3;
+        float[] ambient = { 0, 0, .3f, 1 };
+        float[] diffuse = { 0, 0, .7f, 1 };
+        float[] specular = { 1, 1, 1, 1 };
+
+        gl.glMaterialfv(GL10.GL_FRONT_AND_BACK, GL10.GL_DIFFUSE, diffuse, 0);
+        gl.glMaterialfv(GL10.GL_FRONT_AND_BACK, GL10.GL_AMBIENT, ambient, 0);
+        gl.glMaterialfv(GL10.GL_FRONT_AND_BACK, GL10.GL_SPECULAR, specular, 0);
+        gl.glMaterialf(GL10.GL_FRONT_AND_BACK, GL10.GL_SHININESS, shininess);
+    }  
 }

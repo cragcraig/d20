@@ -50,7 +50,7 @@ class MyGLSurfaceView extends GLSurfaceView {
         super(context);
 
         // Create an OpenGL ES 2.0 context.
-        setEGLContextClientVersion(2);
+        setEGLContextClientVersion(1);
 
         // Set the Renderer for drawing on the GLSurfaceView
         mRenderer = new MyGLRenderer();
@@ -90,7 +90,7 @@ class MyGLSurfaceView extends GLSurfaceView {
                 }
 
                 mRenderer.mAngleX += dx* TOUCH_SCALE_FACTOR;  // = 180.0f / 320
-                mRenderer.mAngleY += dy* TOUCH_SCALE_FACTOR;  // = 180.0f / 320
+                mRenderer.mAngleY += dx* TOUCH_SCALE_FACTOR;  // = 180.0f / 320
                 requestRender();
         }
 
