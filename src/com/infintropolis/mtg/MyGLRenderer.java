@@ -53,7 +53,7 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
         gl.glMatrixMode(GL10.GL_MODELVIEW);
         gl.glLoadIdentity();
 
-        // When using GL_MODELVIEW, you must set the camera view
+        // Using GL_MODELVIEW, set the camera view
         GLU.gluLookAt(gl, 0, 0, -5, 0f, 0f, 0f, 0f, 1.0f, 0.0f);
 
         // Draw
@@ -81,7 +81,7 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
     private void drawLights(GL10 gl) {
         float[] position = { 0.0f, 1.0f, 0.0f, 0.0f }; // directional
         float[] diffuse = { 1.0f, 1.0f, 1.0f, 1f };
-        float[] specular = { 0, 0, 0, 0 };
+        float[] specular = { 0.3f, 0.3f, 0.3f, 1.0f };
         float[] ambient = { .3f, .3f, .3f, 1 };
 
         gl.glEnable(GL10.GL_LIGHTING);

@@ -25,8 +25,8 @@ public class PolyRenderer {
         gl.glLoadIdentity();
         // Translates 4 units into the screen.
         gl.glTranslatef(0, 0, -10);
-        gl.glRotatef(mAngleX, 1.0f, 0.0f, 0.0f);
-        gl.glRotatef(mAngleY, 1.0f, 0.0f, 0.0f);
+        gl.glRotatef(mAngleX, 0.0f, 1.0f, 0.0f);
+        gl.glRotatef(-mAngleY, 1.0f, 0.0f, 0.0f);
 
         // Counter-clockwise winding.
         gl.glFrontFace(GL10.GL_CCW);
@@ -63,7 +63,7 @@ public class PolyRenderer {
     }
 
     private void setMaterial(GL10 gl) {
-        float shininess = 3;
+        float shininess = 5;
         float[] ambient = { 0, 0, .3f, 1 };
         float[] diffuse = { 0, 0, .7f, 1 };
         float[] specular = { 1, 1, 1, 1 };
