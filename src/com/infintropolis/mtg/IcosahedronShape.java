@@ -9,20 +9,21 @@ public class IcosahedronShape extends PolyShape {
 
     private final static float PHI = (float)(1 + Math.sqrt(5)) / 2.0f;
 
-    private final static Vector vertex[] = { new Vector( 1.0f,  0.0f,   PHI),
-                                             new Vector(-1.0f,  0.0f,   PHI),
-                                             new Vector(-1.0f,  0.0f,  -PHI),
-                                             new Vector( 1.0f,  0.0f,  -PHI),
+    private final static Vertex vertex[] = {
+        new Vertex(new Vector( 1.0f,  0.0f,   PHI)),
+        new Vertex(new Vector(-1.0f,  0.0f,   PHI)),
+        new Vertex(new Vector(-1.0f,  0.0f,  -PHI)),
+        new Vertex(new Vector( 1.0f,  0.0f,  -PHI)),
 
-                                             new Vector( 0.0f,  -PHI, -1.0f),
-                                             new Vector( 0.0f,  -PHI,  1.0f),
-                                             new Vector( 0.0f,   PHI,  1.0f),
-                                             new Vector( 0.0f,   PHI, -1.0f),
+        new Vertex(new Vector( 0.0f,  -PHI, -1.0f)),
+        new Vertex(new Vector( 0.0f,  -PHI,  1.0f)),
+        new Vertex(new Vector( 0.0f,   PHI,  1.0f)),
+        new Vertex(new Vector( 0.0f,   PHI, -1.0f)),
 
-                                             new Vector(  PHI,  1.0f,  0.0f),
-                                             new Vector(  PHI, -1.0f,  0.0f),
-                                             new Vector( -PHI, -1.0f,  0.0f),
-                                             new Vector( -PHI,  1.0f,  0.0f) };
+        new Vertex(new Vector(  PHI,  1.0f,  0.0f)),
+        new Vertex(new Vector(  PHI, -1.0f,  0.0f)),
+        new Vertex(new Vector( -PHI, -1.0f,  0.0f)),
+        new Vertex(new Vector( -PHI,  1.0f,  0.0f)) };
 
     private final static short drawOrder[] = {  0,  6,  1,
                                                 0,  1,  5,
@@ -46,10 +47,37 @@ public class IcosahedronShape extends PolyShape {
                                                 6,  7, 11 };
 
     public IcosahedronShape() {
+        // Create faces
         for (int i = 0; i < drawOrder.length; i += PolyShape.VERTICIES_PER_FACE) {
             addFace(new Face(vertex[drawOrder[i]],
                              vertex[drawOrder[i + 1]],
                              vertex[drawOrder[i + 2]]));
+        }
+        // Generate vertex normals
+        computeVertexNormals();
+    }
+
+    private final void computeVertexNormals() {
+        Vector sum = new Vector();
+        for (int v = 0; v < vertex.length; v++) {
+            sum.set(0.0f, 0.0f, 0.0f);
+            int count = 0;
+            // Vertex normal is the average of all surrounding face normals
+            for (int i = 0; i < numFaces(); i++) {
+                Vector norm = getFace(i).getNormal();
+                for (int j = 0; j < PolyShape.VERTICIES_PER_FACE; j++) {
+                    if (drawOrder[i * PolyShape.VERTICIES_PER_FACE + j] == v) {
+                        sum.x += norm.x;
+                        sum.y += norm.y;
+                        sum.z += norm.z;
+                        count++;
+                        break;
+                    }
+                }
+            }
+            vertex[v].normal = new Vector(sum.x / (float)count,
+                                          sum.y / (float)count,
+                                          sum.z / (float)count);
         }
     }
 }

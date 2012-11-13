@@ -70,8 +70,18 @@ public class Vector {
                           x * b.y - y * b.x);
     }
 
+    // Sum
+    public Vector getSum(Vector b) {
+        return new Vector(x + b.x, y + b.y, z + b.z);
+    }
+
     // Offset
     public Vector getOffsetFrom(Vector b) {
         return new Vector(x - b.x, y - b.y, z - b.z);
+    }
+
+    // Average
+    public Vector getScaled(float factor) {
+        return new Vector(x * factor, y * factor, z * factor);
     }
 }

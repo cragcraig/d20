@@ -32,12 +32,16 @@ public class PolyRenderer {
         float vertexCoords[] = new float[mPolyShape.numCoords()];
         float vertexNormals[] = new float[mPolyShape.numCoords()];
         int i = 0;
+        // Write OpenGL coordinate and normal buffers
         for (Face f : mPolyShape) {
             Vector norm = f.getNormal();
             for (int j = 0; j < PolyShape.VERTICIES_PER_FACE; j++) {
                 int offset = i + j * PolyShape.COORDS_PER_VERTEX;
-                f.vertex[j].asFloats(vertexCoords, offset);
-                norm.asFloats(vertexNormals, offset);
+                // Coordinate
+                f.vertex[j].pos.asFloats(vertexCoords, offset);
+                // Normal is an average of face normal and vertex normal
+                Vector avgNorm = norm.getScaled(0.5f).getSum(f.vertex[j].normal.getScaled(0.5f));
+                avgNorm.asFloats(vertexNormals, offset);
             }
             i += PolyShape.VERTICIES_PER_FACE * PolyShape.COORDS_PER_VERTEX;
         }

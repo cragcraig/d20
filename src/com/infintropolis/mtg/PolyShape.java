@@ -31,6 +31,11 @@ public abstract class PolyShape implements Iterable<Face> {
         mFaces.add(f);
     }
 
+    // Get a Face
+    public Face getFace(int n) {
+        return mFaces.get(n);
+    }
+
     // Get the number of faces
     public int numFaces() {
         return mFaces.size();
