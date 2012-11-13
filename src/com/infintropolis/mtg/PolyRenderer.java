@@ -40,7 +40,7 @@ public class PolyRenderer {
                 // Coordinate
                 f.vertex[j].pos.asFloats(vertexCoords, offset);
                 // Normal is an average of face normal and vertex normal
-                Vector avgNorm = norm.getScaled(0.5f).getSum(f.vertex[j].normal.getScaled(0.5f));
+                Vector avgNorm = norm.getScaled(0.3f).getSum(f.vertex[j].normal.getScaled(0.7f));
                 avgNorm.asFloats(vertexNormals, offset);
             }
             i += PolyShape.VERTICIES_PER_FACE * PolyShape.COORDS_PER_VERTEX;

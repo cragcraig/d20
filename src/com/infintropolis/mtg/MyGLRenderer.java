@@ -79,7 +79,9 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
 
     // Setting the light
     private void drawLights(GL10 gl) {
-        float[] position = { 0.0f, 1.0f, 0.0f, 0.0f }; // directional
+        Vector light = new Vector(-0.2f, 0.1f, 1.0f);
+        light.normalize();
+        float[] position = { light.x, light.y, light.z, 0.0f }; // directional
         float[] diffuse = { 1.0f, 1.0f, 1.0f, 1f };
         float[] specular = { 0.3f, 0.3f, 0.3f, 1.0f };
         float[] ambient = { .3f, .3f, .3f, 1 };
