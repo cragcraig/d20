@@ -55,6 +55,8 @@ public class IcosahedronShape extends PolyShape {
         }
         // Generate vertex normals
         computeVertexNormals();
+        // Generate texture coordinates
+        computeTextureCoords();
     }
 
     private final void computeVertexNormals() {
@@ -78,6 +80,15 @@ public class IcosahedronShape extends PolyShape {
             vertex[v].normal = new Vector(sum.x / (float)count,
                                           sum.y / (float)count,
                                           sum.z / (float)count);
+        }
+    }
+
+    private final void computeTextureCoords() {
+        for (int i = 0; i < numFaces(); i++) {
+            Face face = getFace(i);
+            face.texCoord[0] = new Vector(0.5f, 1.0f, 0.0f);
+            face.texCoord[1] = new Vector(0.0f, 0.0f, 0.0f);
+            face.texCoord[2] = new Vector(1.0f, 0.0f, 0.0f);
         }
     }
 }

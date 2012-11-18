@@ -10,6 +10,7 @@ import java.nio.ShortBuffer;
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 
+import android.content.Context;
 import android.opengl.GLES11;
 import android.opengl.GLSurfaceView;
 import android.opengl.GLU;
@@ -18,12 +19,16 @@ import android.util.Log;
 
 public class MyGLRenderer implements GLSurfaceView.Renderer {
 
-    private static final String TAG = "MyGLRenderer";
+    final private Context mActivityContext;
     private PolyRenderer mShape;
 
     // Declare as volatile because we are updating it from another thread
     public volatile float mAngleX;
     public volatile float mAngleY;
+
+    public MyGLRenderer(final Context context) {
+        mActivityContext = context;
+    }
 
     @Override
     public void onSurfaceCreated(GL10 gl, EGLConfig config) {
@@ -39,9 +44,18 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
         // Really nice perspective calculations.
         gl.glHint(GL10.GL_PERSPECTIVE_CORRECTION_HINT, GL10.GL_NICEST);
 
+        // Set up lighting
         drawLights(gl);
 
-        mShape = new PolyRenderer(new IcosahedronShape());
+        // Create material
+        Material mat = new Material(Material.loadTexture(gl, mActivityContext, R.drawable.texture),
+                                    new Vector4(0.2f, 0.709803922f, 0.898039216f, 0.7f),
+                                    5.0f,
+                                    new Vector4(0.0f, 0.0f, 0.3f, 1.0f),
+                                    new Vector4(0.0f, 0.0f, 0.7f, 1.0f),
+                                    new Vector4(1.0f, 1.0f, 1.0f, 1.0f) );
+
+        mShape = new PolyRenderer(new IcosahedronShape(), mat);
     }
 
     @Override

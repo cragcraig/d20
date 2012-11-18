@@ -6,6 +6,7 @@ package com.infintropolis.mtg;
 public class Face {
 
     public Vertex vertex[] = new Vertex[3];
+    public Vector texCoord[] = new Vector[3];
 
     public Face(Vertex v1, Vertex v2, Vertex v3) {
         vertex[0] = v1;
