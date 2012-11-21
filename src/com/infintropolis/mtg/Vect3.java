@@ -5,25 +5,29 @@ package com.infintropolis.mtg;
 import java.lang.Math;
 
 
-public class Vector {
+public class Vect3 implements Vect {
 
     public float x;
     public float y;
     public float z;
 
-    public Vector() {
+    public Vect3() {
         this(0.0f, 0.0f, 0.0f);
     }
 
-    public Vector(float x, float y, float z) {
+    public Vect3(Vect2 vect2, float z) {
+        this(vect2.x, vect2.y, z);
+    }
+
+    public Vect3(float x, float y, float z) {
         set(x, y, z);
     }
 
-    public Vector(float[] values, int offset) {
+    public Vect3(float[] values, int offset) {
         this(values[offset], values[offset + 1], values[offset + 2]);
     }
 
-    public Vector(float[] values) {
+    public Vect3(float[] values) {
         this(values, 0);
     }
 
@@ -35,17 +39,26 @@ public class Vector {
     }
 
     // Write to float
+    @Override
     public void asFloats(float[] out, int offset) {
         out[offset] = x;
         out[offset + 1] = y;
         out[offset + 2] = z;
     }
 
+    // Returns new float array
+    @Override
+    public float[] getFloats() {
+        float[] ret = new float[3];
+        asFloats(ret, 0);
+        return ret;
+    }
+
     // Clone
     // Don't implement Cloneable so we don't have to deal with an exception that
     // won't be raised anyway.
-    public Vector clone() {
-        return new Vector(x, y, z);
+    public Vect3 clone() {
+        return new Vect3(x, y, z);
     }
 
     // Normalize
@@ -57,31 +70,31 @@ public class Vector {
     }
 
     // Clone and normalize clone
-    public Vector getNormalized() {
-        Vector norm = clone();
+    public Vect3 getNormalized() {
+        Vect3 norm = clone();
         norm.normalize();
         return norm;
     }
 
     // Cross product
-    public Vector getCrossProduct(Vector b) {
-        return new Vector(y * b.z - z * b.y,
-                          z * b.x - x * b.z,
-                          x * b.y - y * b.x);
+    public Vect3 getCrossProduct(Vect3 b) {
+        return new Vect3(y * b.z - z * b.y,
+                         z * b.x - x * b.z,
+                         x * b.y - y * b.x);
     }
 
     // Sum
-    public Vector getSum(Vector b) {
-        return new Vector(x + b.x, y + b.y, z + b.z);
+    public Vect3 getSum(Vect3 b) {
+        return new Vect3(x + b.x, y + b.y, z + b.z);
     }
 
     // Offset
-    public Vector getOffsetFrom(Vector b) {
-        return new Vector(x - b.x, y - b.y, z - b.z);
+    public Vect3 getOffsetFrom(Vect3 b) {
+        return new Vect3(x - b.x, y - b.y, z - b.z);
     }
 
     // Average
-    public Vector getScaled(float factor) {
-        return new Vector(x * factor, y * factor, z * factor);
+    public Vect3 getScaled(float factor) {
+        return new Vect3(x * factor, y * factor, z * factor);
     }
 }

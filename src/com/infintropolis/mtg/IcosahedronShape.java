@@ -10,20 +10,20 @@ public class IcosahedronShape extends PolyShape {
     private final static float PHI = (float)(1 + Math.sqrt(5)) / 2.0f;
 
     private final static Vertex vertex[] = {
-        new Vertex(new Vector( 1.0f,  0.0f,   PHI)),
-        new Vertex(new Vector(-1.0f,  0.0f,   PHI)),
-        new Vertex(new Vector(-1.0f,  0.0f,  -PHI)),
-        new Vertex(new Vector( 1.0f,  0.0f,  -PHI)),
+        new Vertex(new Vect3( 1.0f,  0.0f,   PHI)),
+        new Vertex(new Vect3(-1.0f,  0.0f,   PHI)),
+        new Vertex(new Vect3(-1.0f,  0.0f,  -PHI)),
+        new Vertex(new Vect3( 1.0f,  0.0f,  -PHI)),
 
-        new Vertex(new Vector( 0.0f,  -PHI, -1.0f)),
-        new Vertex(new Vector( 0.0f,  -PHI,  1.0f)),
-        new Vertex(new Vector( 0.0f,   PHI,  1.0f)),
-        new Vertex(new Vector( 0.0f,   PHI, -1.0f)),
+        new Vertex(new Vect3( 0.0f,  -PHI, -1.0f)),
+        new Vertex(new Vect3( 0.0f,  -PHI,  1.0f)),
+        new Vertex(new Vect3( 0.0f,   PHI,  1.0f)),
+        new Vertex(new Vect3( 0.0f,   PHI, -1.0f)),
 
-        new Vertex(new Vector(  PHI,  1.0f,  0.0f)),
-        new Vertex(new Vector(  PHI, -1.0f,  0.0f)),
-        new Vertex(new Vector( -PHI, -1.0f,  0.0f)),
-        new Vertex(new Vector( -PHI,  1.0f,  0.0f)) };
+        new Vertex(new Vect3(  PHI,  1.0f,  0.0f)),
+        new Vertex(new Vect3(  PHI, -1.0f,  0.0f)),
+        new Vertex(new Vect3( -PHI, -1.0f,  0.0f)),
+        new Vertex(new Vect3( -PHI,  1.0f,  0.0f)) };
 
     private final static short drawOrder[] = {  0,  6,  1,
                                                 0,  1,  5,
@@ -60,13 +60,13 @@ public class IcosahedronShape extends PolyShape {
     }
 
     private final void computeVertexNormals() {
-        Vector sum = new Vector();
+        Vect3 sum = new Vect3();
         for (int v = 0; v < vertex.length; v++) {
             sum.set(0.0f, 0.0f, 0.0f);
             int count = 0;
             // Vertex normal is the average of all surrounding face normals
             for (int i = 0; i < numFaces(); i++) {
-                Vector norm = getFace(i).getNormal();
+                Vect3 norm = getFace(i).getNormal();
                 for (int j = 0; j < PolyShape.VERTICIES_PER_FACE; j++) {
                     if (drawOrder[i * PolyShape.VERTICIES_PER_FACE + j] == v) {
                         sum.x += norm.x;
@@ -77,7 +77,7 @@ public class IcosahedronShape extends PolyShape {
                     }
                 }
             }
-            vertex[v].normal = new Vector(sum.x / (float)count,
+            vertex[v].normal = new Vect3(sum.x / (float)count,
                                           sum.y / (float)count,
                                           sum.z / (float)count);
         }
@@ -86,9 +86,9 @@ public class IcosahedronShape extends PolyShape {
     private final void computeTextureCoords() {
         for (int i = 0; i < numFaces(); i++) {
             Face face = getFace(i);
-            face.texCoord[0] = new Vector(0.5f, 1.0f, 0.0f);
-            face.texCoord[1] = new Vector(0.0f, 0.0f, 0.0f);
-            face.texCoord[2] = new Vector(1.0f, 0.0f, 0.0f);
+            face.texCoord[0] = new Vect3(0.5f, 1.0f, 0.0f);
+            face.texCoord[1] = new Vect3(0.0f, 0.0f, 0.0f);
+            face.texCoord[2] = new Vect3(1.0f, 0.0f, 0.0f);
         }
     }
 }

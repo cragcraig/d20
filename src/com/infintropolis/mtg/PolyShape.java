@@ -11,6 +11,7 @@ public abstract class PolyShape implements Iterable<Face> {
 
     // Constants
     static final int COORDS_PER_VERTEX = 3;
+    static final int TEX_COORDS_PER_VERTEX = 2;
     static final int VERTICIES_PER_FACE = 3;
     static final int VERTEX_STRIDE = COORDS_PER_VERTEX * 4; // 4 bytes per vertex
 
@@ -44,6 +45,11 @@ public abstract class PolyShape implements Iterable<Face> {
     // Get the number of verticies
     public int numVerticies() {
         return numFaces() * VERTICIES_PER_FACE;
+    }
+
+    // Get the number of texture coordinates
+    public int numTexCoords() {
+        return numVerticies() * TEX_COORDS_PER_VERTEX;
     }
 
     // Get the number of Coordinates

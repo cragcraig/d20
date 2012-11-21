@@ -49,11 +49,11 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
 
         // Create material
         Material mat = new Material(Material.loadTexture(gl, mActivityContext, R.drawable.texture),
-                                    new Vector4(0.2f, 0.709803922f, 0.898039216f, 0.7f),
+                                    new Vect4(0.2f, 0.709803922f, 0.898039216f, 0.7f),
                                     5.0f,
-                                    new Vector4(0.0f, 0.0f, 0.3f, 1.0f),
-                                    new Vector4(0.0f, 0.0f, 0.7f, 1.0f),
-                                    new Vector4(1.0f, 1.0f, 1.0f, 1.0f) );
+                                    new Vect4(0.0f, 0.0f, 0.3f, 1.0f),
+                                    new Vect4(0.0f, 0.0f, 0.7f, 1.0f),
+                                    new Vect4(1.0f, 1.0f, 1.0f, 1.0f) );
 
         mShape = new PolyRenderer(new IcosahedronShape(), mat);
     }
@@ -93,7 +93,7 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
 
     // Setting the light
     private void drawLights(GL10 gl) {
-        Vector light = new Vector(-0.2f, 0.1f, 1.0f);
+        Vect3 light = new Vect3(-0.2f, 0.1f, 1.0f);
         light.normalize();
         float[] position = { light.x, light.y, light.z, 0.0f }; // directional
         float[] diffuse = { 1.0f, 1.0f, 1.0f, 1f };

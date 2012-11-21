@@ -6,7 +6,7 @@ package com.infintropolis.mtg;
 public class Face {
 
     public Vertex vertex[] = new Vertex[3];
-    public Vector texCoord[] = new Vector[3];
+    public Vect2 texCoord[] = new Vect2[3];
 
     public Face(Vertex v1, Vertex v2, Vertex v3) {
         vertex[0] = v1;
@@ -22,12 +22,12 @@ public class Face {
         this(verticies, 0);
     }
 
-    public Vector getNormal() {
+    public Vect3 getNormal() {
         // Uses p1 as a new origin for p0, p2.
-        Vector a = vertex[2].pos.getOffsetFrom(vertex[1].pos);
-        Vector b = vertex[0].pos.getOffsetFrom(vertex[1].pos);
+        Vect3 a = vertex[2].pos.getOffsetFrom(vertex[1].pos);
+        Vect3 b = vertex[0].pos.getOffsetFrom(vertex[1].pos);
         // Compute the cross product a X b to get the face normal.
-        Vector norm = a.getCrossProduct(b);
+        Vect3 norm = a.getCrossProduct(b);
         // Return a normalized vector.
         norm.normalize();
         return norm;

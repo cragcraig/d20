@@ -14,14 +14,14 @@ import android.opengl.GLUtils;
 public class Material {
 
     private int mTextureHandle;
-    private Vector4 mColor;
+    private Vect4 mColor;
     private float mShininess;
-    private Vector4 mAmbient;
-    private Vector4 mDiffuse;
-    private Vector4 mSpecular;
+    private Vect4 mAmbient;
+    private Vect4 mDiffuse;
+    private Vect4 mSpecular;
 
-    public Material(int textureHandle, Vector4 color, float shininess,
-                    Vector4 ambient, Vector4 diffuse, Vector4 specular) {
+    public Material(int textureHandle, Vect4 color, float shininess,
+                    Vect4 ambient, Vect4 diffuse, Vect4 specular) {
         mTextureHandle = textureHandle;
         mColor = color;
         mShininess = shininess;
@@ -31,8 +31,7 @@ public class Material {
     }
 
     public void apply(GL10 gl) {
-        gl.glColor4f(mColor.getFloat(0), mColor.getFloat(1),
-                     mColor.getFloat(2), mColor.getFloat(3));
+        gl.glColor4f(mColor.x, mColor.y, mColor.z, mColor.a);
         applyMaterial(gl);
         applyTexture(gl);
     }

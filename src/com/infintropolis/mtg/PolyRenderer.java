@@ -34,22 +34,20 @@ public class PolyRenderer {
         // Init OpenGL buffers
         float vertexCoords[] = new float[mPolyShape.numCoords()];
         float vertexNormals[] = new float[mPolyShape.numCoords()];
-        float vertexTexCoords[] = new float[mPolyShape.numCoords()];
+        float vertexTexCoords[] = new float[mPolyShape.numTexCoords()];
         int i = 0;
-        // Write OpenGL coordinate, normal, and texture buffers
+        // Write OpenGL vertex coordinate, texture, and normal buffers
         for (Face f : mPolyShape) {
-            Vector norm = f.getNormal();
+            Vect3 norm = f.getNormal();
             for (int j = 0; j < PolyShape.VERTICIES_PER_FACE; j++) {
                 int offset = (i + j) * PolyShape.COORDS_PER_VERTEX;
-                // Coordinate
+                // Vertex coordinate
                 f.vertex[j].pos.asFloats(vertexCoords, offset);
-                // Normal is an average of face normal and vertex normal
-                Vector avgNorm = norm.getScaled(0.3f).getSum(f.vertex[j].normal.getScaled(0.7f));
-                avgNorm.asFloats(vertexNormals, offset);
                 // Texture coordinate
-                // TODO: clean this up.
-                vertexTexCoords[(i + j) * 2] = f.texCoord[j].x; // TEX_COORDS_PER_VERTEX
-                vertexTexCoords[(i + j) * 2 + 1] = f.texCoord[j].y; // TEX_COORDS_PER_VERTEX
+                f.texCoord[j].asFloats(vertexTexCoords, (i + j) * PolyShape.TEX_COORDS_PER_VERTEX);
+                // Use a combination of the face normal and vertex normal
+                Vect3 avgNorm = norm.getScaled(0.3f).getSum(f.vertex[j].normal.getScaled(0.7f));
+                avgNorm.asFloats(vertexNormals, offset);
             }
             i += PolyShape.VERTICIES_PER_FACE;
         }
@@ -71,7 +69,7 @@ public class PolyRenderer {
 
     public void draw(GL10 gl, float mAngleX, float mAngleY) {
         gl.glLoadIdentity();
-        // Translates 4 units into the screen.
+        // Translates 10 units into the screen.
         gl.glTranslatef(0, 0, -10);
         // Rotates
         gl.glRotatef(mAngleX, 0.0f, 1.0f, 0.0f);
@@ -88,18 +86,18 @@ public class PolyRenderer {
         // Enable textures
         gl.glEnable(GL10.GL_TEXTURE_2D);
 
-        // Apply material
-        mMaterial.apply(gl);
-
-        // Enable the OpenGL vertex and normal buffers
+        // Enable the OpenGL buffers
         gl.glEnableClientState(GL10.GL_VERTEX_ARRAY);
         gl.glEnableClientState(GL10.GL_NORMAL_ARRAY);
         gl.glEnableClientState(GL10.GL_TEXTURE_COORD_ARRAY);
-        // Specifies the location and data format of an array of vertex
-        // coordinates to use when rendering.
+
+        // Apply material
+        mMaterial.apply(gl);
+
+        // Set OpenGL buffers
         gl.glVertexPointer(PolyShape.COORDS_PER_VERTEX, GL10.GL_FLOAT, 0, mVertexCoords);
         gl.glNormalPointer(GL10.GL_FLOAT, 0, mVertexNormals);
-        gl.glTexCoordPointer(2, GL10.GL_FLOAT, 0, mVertexTexCoords);
+        gl.glTexCoordPointer(PolyShape.TEX_COORDS_PER_VERTEX, GL10.GL_FLOAT, 0, mVertexTexCoords);
 
         gl.glDrawArrays(GL10.GL_TRIANGLES, 0, mPolyShape.numVerticies());
 

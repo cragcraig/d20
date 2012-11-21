@@ -5,15 +5,15 @@ package com.infintropolis.mtg;
 
 public class Vertex {
 
-    public Vector pos;
-    public Vector normal;
+    public Vect3 pos;
+    public Vect3 normal;
 
-    public Vertex(Vector pos, Vector normal) {
+    public Vertex(Vect3 pos, Vect3 normal) {
         this.pos = pos;
         this.normal = normal;
     }
 
-    public Vertex(Vector pos) {
+    public Vertex(Vect3 pos) {
         this(pos, null);
     }
 }
