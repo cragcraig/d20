@@ -86,9 +86,9 @@ public class IcosahedronShape extends PolyShape {
     private final void computeTextureCoords() {
         for (int i = 0; i < numFaces(); i++) {
             Face face = getFace(i);
-            face.texCoord[0] = new Vect3(0.5f, 1.0f, 0.0f);
-            face.texCoord[1] = new Vect3(0.0f, 0.0f, 0.0f);
-            face.texCoord[2] = new Vect3(1.0f, 0.0f, 0.0f);
+            face.texCoord[0] = new Vect2(0.5f, 1.0f);
+            face.texCoord[1] = new Vect2(0.0f, 0.0f);
+            face.texCoord[2] = new Vect2(1.0f, 0.0f);
         }
     }
 }

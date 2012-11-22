@@ -11,6 +11,8 @@ import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.opengl.GLES11;
 import android.opengl.GLSurfaceView;
 import android.opengl.GLU;
@@ -48,12 +50,14 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
         drawLights(gl);
 
         // Create material
-        Material mat = new Material(Material.loadTexture(gl, mActivityContext, R.drawable.texture),
-                                    new Vect4(0.2f, 0.709803922f, 0.898039216f, 0.7f),
-                                    5.0f,
-                                    new Vect4(0.0f, 0.0f, 0.3f, 1.0f),
-                                    new Vect4(0.0f, 0.0f, 0.7f, 1.0f),
-                                    new Vect4(1.0f, 1.0f, 1.0f, 1.0f) );
+        Material mat = new Material(
+                           gl,
+                           Material.loadTexture(gl, mActivityContext, R.drawable.texture),
+                           Vect4.fromRGBA(101, 161, 222, 0.8f),
+                           5.0f,
+                           new Vect4(0.0f, 0.0f, 0.3f, 1.0f),
+                           new Vect4(0.0f, 0.0f, 0.7f, 1.0f),
+                           new Vect4(1.0f, 1.0f, 1.0f, 1.0f) );
 
         mShape = new PolyRenderer(new IcosahedronShape(), mat);
     }

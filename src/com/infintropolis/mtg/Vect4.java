@@ -33,6 +33,11 @@ public class Vect4 implements Vect {
         this(values[offset], values[offset + 1], values[offset + 2], values[offset + 3]);
     }
 
+    // Factory method
+    public static Vect4 fromRGBA(int r, int g, int b, float alpha) {
+        return new Vect4((float)r / 255.0f, (float)g / 255.0f, (float)b / 255.0f, alpha);
+    }
+
     // Write to float
     @Override
     public void asFloats(float[] out, int offset) {

@@ -10,6 +10,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.opengl.GLUtils;
 
+import java.nio.ByteBuffer;
 
 public class Material {
 
@@ -20,7 +21,7 @@ public class Material {
     private Vect4 mDiffuse;
     private Vect4 mSpecular;
 
-    public Material(int textureHandle, Vect4 color, float shininess,
+    public Material(GL10 gl, int textureHandle, Vect4 color, float shininess,
                     Vect4 ambient, Vect4 diffuse, Vect4 specular) {
         mTextureHandle = textureHandle;
         mColor = color;
@@ -39,6 +40,7 @@ public class Material {
     private void applyTexture(GL10 gl) {
         // Set the active texture unit to texture unit 0.
         gl.glActiveTexture(GL10.GL_TEXTURE0);
+        gl.glClientActiveTexture(GL10.GL_TEXTURE0);
         // Bind the texture to this unit.
         gl.glBindTexture(GL10.GL_TEXTURE_2D, mTextureHandle);
     }

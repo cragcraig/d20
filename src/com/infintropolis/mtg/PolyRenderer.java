@@ -5,6 +5,8 @@ package com.infintropolis.mtg;
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.opengl.GLES20;
 import android.opengl.Matrix;
 import android.util.Log;
@@ -12,6 +14,7 @@ import android.util.Log;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
+import java.nio.IntBuffer;
 import java.nio.ShortBuffer;
 
 
@@ -89,15 +92,17 @@ public class PolyRenderer {
         // Enable the OpenGL buffers
         gl.glEnableClientState(GL10.GL_VERTEX_ARRAY);
         gl.glEnableClientState(GL10.GL_NORMAL_ARRAY);
-        gl.glEnableClientState(GL10.GL_TEXTURE_COORD_ARRAY);
 
         // Apply material
         mMaterial.apply(gl);
+        gl.glEnableClientState(GL10.GL_TEXTURE_COORD_ARRAY);
+        gl.glTexCoordPointer(PolyShape.TEX_COORDS_PER_VERTEX, GL10.GL_FLOAT, 0, mVertexTexCoords);
 
         // Set OpenGL buffers
         gl.glVertexPointer(PolyShape.COORDS_PER_VERTEX, GL10.GL_FLOAT, 0, mVertexCoords);
         gl.glNormalPointer(GL10.GL_FLOAT, 0, mVertexNormals);
-        gl.glTexCoordPointer(PolyShape.TEX_COORDS_PER_VERTEX, GL10.GL_FLOAT, 0, mVertexTexCoords);
+
+        gl.glTexEnvx(GL10.GL_TEXTURE_ENV, GL10.GL_TEXTURE_ENV_MODE, GL10.GL_BLEND);
 
         gl.glDrawArrays(GL10.GL_TRIANGLES, 0, mPolyShape.numVerticies());
 
