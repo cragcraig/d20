@@ -33,7 +33,15 @@ public class Vect4 implements Vect {
         this(values[offset], values[offset + 1], values[offset + 2], values[offset + 3]);
     }
 
-    // Factory method
+    // Factory color methods
+    public static Vect4 fromGreyValue(float grey) {
+        return new Vect4(grey, grey, grey, 1.0f);
+    }
+
+    public static Vect4 fromRGB(int r, int g, int b) {
+        return fromRGBA(r, g, b, 1.0f);
+    }
+
     public static Vect4 fromRGBA(int r, int g, int b, float alpha) {
         return new Vect4((float)r / 255.0f, (float)g / 255.0f, (float)b / 255.0f, alpha);
     }

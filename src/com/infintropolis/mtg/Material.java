@@ -46,11 +46,6 @@ public class Material {
     }
 
     private void applyMaterial(GL10 gl) {
-        float shininess = 5;
-        float[] ambient = { 0, 0, .3f, 1 };
-        float[] diffuse = { 0, 0, .7f, 1 };
-        float[] specular = { 1, 1, 1, 1 };
-
         gl.glMaterialfv(GL10.GL_FRONT_AND_BACK, GL10.GL_DIFFUSE, mDiffuse.getFloats(), 0);
         gl.glMaterialfv(GL10.GL_FRONT_AND_BACK, GL10.GL_AMBIENT, mAmbient.getFloats(), 0);
         gl.glMaterialfv(GL10.GL_FRONT_AND_BACK, GL10.GL_SPECULAR, mSpecular.getFloats(), 0);

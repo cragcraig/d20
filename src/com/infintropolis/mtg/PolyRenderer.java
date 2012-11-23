@@ -102,7 +102,7 @@ public class PolyRenderer {
         gl.glVertexPointer(PolyShape.COORDS_PER_VERTEX, GL10.GL_FLOAT, 0, mVertexCoords);
         gl.glNormalPointer(GL10.GL_FLOAT, 0, mVertexNormals);
 
-        gl.glTexEnvx(GL10.GL_TEXTURE_ENV, GL10.GL_TEXTURE_ENV_MODE, GL10.GL_BLEND);
+        gl.glTexEnvx(GL10.GL_TEXTURE_ENV, GL10.GL_TEXTURE_ENV_MODE, GL10.GL_MODULATE);
 
         gl.glDrawArrays(GL10.GL_TRIANGLES, 0, mPolyShape.numVerticies());
 
