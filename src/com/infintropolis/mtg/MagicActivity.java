@@ -7,6 +7,10 @@ import android.content.Context;
 import android.opengl.GLSurfaceView;
 import android.os.Bundle;
 import android.view.MotionEvent;
+import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
+
 
 public class MagicActivity extends Activity {
 
@@ -15,6 +19,9 @@ public class MagicActivity extends Activity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        requestWindowFeature(Window.FEATURE_NO_TITLE); 
+        this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON, WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
         // Create a GLSurfaceView instance and set it
         // as the ContentView for this Activity
@@ -38,6 +45,7 @@ public class MagicActivity extends Activity {
         // The following call resumes a paused rendering thread.
         // If you de-allocated graphic objects for onPause()
         // this is a good place to re-allocate them.
+        mGLView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LOW_PROFILE);
         mGLView.onResume();
     }
 }
