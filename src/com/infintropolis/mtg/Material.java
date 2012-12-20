@@ -61,7 +61,7 @@ public class Material {
             final BitmapFactory.Options options = new BitmapFactory.Options();
             options.inScaled = false;   // No pre-scaling
 
-            // Read in the resource
+            // Read in the resource (dimensions must be a power of 2)
             final Bitmap bitmap = BitmapFactory.decodeResource(
                 activityContext.getResources(), resourceId, options);
 
