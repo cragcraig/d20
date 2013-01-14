@@ -85,15 +85,18 @@ public class IcosahedronShape extends PolyShape {
     }
 
     private final void computeTextureCoords() {
-        int nwidth = (int)Math.sqrt(drawOrder.length);
-        int tsize = 512 / nwidth;
+        final int TEX_SIZE = 512;
+        //final int nwidth = (int)Math.sqrt(drawOrder.length);
+        final int nwidth = 5;
+        final int tsize = TEX_SIZE / nwidth;
+        final float size_fract = (float)tsize / TEX_SIZE;
         for (int i = 0; i < numFaces(); i++) {
             Face face = getFace(i);
-            int x = (float)(tsize * (i % nwidth)) / 512.0;
-            int y = (float)(tsize * (i / nwidth)) / 512.0;
-            face.texCoord[0] = new Vect2(0.5f + y, 0.0f + x);
-            face.texCoord[1] = new Vect2(0.0f + y, 1.0f + x);
-            face.texCoord[2] = new Vect2(1.0f + y, 1.0f + x);
+            float x = (i / nwidth) * size_fract;
+            float y = (i % nwidth) * size_fract;
+            face.texCoord[0] = new Vect2(0.5f * size_fract + y, 0.0f * size_fract + x);
+            face.texCoord[1] = new Vect2(0.0f * size_fract + y, 1.0f * size_fract + x);
+            face.texCoord[2] = new Vect2(1.0f * size_fract + y, 1.0f * size_fract + x);
         }
     }
 }
