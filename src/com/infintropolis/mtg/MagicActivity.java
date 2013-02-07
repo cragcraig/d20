@@ -33,8 +33,7 @@ public class MagicActivity extends Activity {
     protected void onPause() {
         super.onPause();
         // The following call pauses the rendering thread.
-        // If your OpenGL application is memory intensive,
-        // you should consider de-allocating objects that
+        // Consider de-allocating objects that
         // consume significant memory here.
         mGLView.onPause();
     }
@@ -43,8 +42,8 @@ public class MagicActivity extends Activity {
     protected void onResume() {
         super.onResume();
         // The following call resumes a paused rendering thread.
-        // If you de-allocated graphic objects for onPause()
-        // this is a good place to re-allocate them.
+        // De-allocated graphic objects for onPause()
+        // should be re-allocated.
         mGLView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LOW_PROFILE);
         mGLView.onResume();
     }
@@ -57,7 +56,7 @@ class MyGLSurfaceView extends GLSurfaceView {
     public MyGLSurfaceView(Context context) {
         super(context);
 
-        // Create an OpenGL ES 2.0 context.
+        // Create an OpenGL ES 1.0 context.
         setEGLContextClientVersion(1);
 
         // Set the Renderer for drawing on the GLSurfaceView
